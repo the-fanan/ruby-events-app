@@ -1,4 +1,5 @@
 class TicketsController < ApplicationController
+  before_action :authenticate_user!, except: [:show]
   before_action :set_ticket, only: %i[ show edit update destroy ]
 
   # GET /tickets or /tickets.json
