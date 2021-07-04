@@ -51,6 +51,8 @@ test:
 #
 production:
   <<: *default
-  database: tix_production
-  username: tix
-  password: <%= ENV['TIX_DATABASE_PASSWORD'] %>
+  database: tix
+  username: <%= ENV['DATABASE_USER'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+  port: 3306
+  host: <%= ENV['DATABASE_HOST'] %>
