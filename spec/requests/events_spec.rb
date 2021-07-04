@@ -24,7 +24,16 @@ RSpec.describe "/events", type: :request do
       end_date: '2088-01-02',
       start_time: '13:00',
       end_time: '16:00',
-      is_active: 1
+      is_active: 1,
+      tickets_attributes: [
+        {
+          name: 'Access',
+          payment_type: 'free',
+          description: 'Allow access for one',
+          price: 0,
+          available_slots: 100
+        }
+      ]
     }
   }
 
@@ -41,31 +50,10 @@ RSpec.describe "/events", type: :request do
       is_active: 1
     }
   }
-
-  let(:valid_ticket_attributes) {
-    {
-      name: 'Access',
-      payment_type: 'free',
-      description: 'Allow access for one',
-      price: 0,
-      available_slots: 100
-    }
-  }
-
-  let(:invalid_ticket_attributes) {
-    {
-      name: '',
-      payment_type: '',
-      description: 'Allow access for one',
-      price: 0,
-      available_slots: 100
-    }
-  }
   
   describe "GET /index" do
     it "renders a successful response" do
       event = Event.create! valid_attributes
-      event.tickets.create! valid_ticket_attributes
       user = User.create!({
         email: 'user@test.com',
         password: 'user123'
@@ -79,7 +67,6 @@ RSpec.describe "/events", type: :request do
   describe "GET /show" do
     it "renders a successful response" do
       event = Event.create! valid_attributes
-      event.tickets.create! valid_ticket_attributes
       get event_url(event)
       expect(response).to be_successful
     end
@@ -120,7 +107,7 @@ RSpec.describe "/events", type: :request do
           })
           sign_in user
           post events_url, params: { event: valid_attributes }
-        }.to change(Event, :count).by(1)
+        }.to change(Event, :count).by(1) .and change(Ticket, :count).by(1)
       end
 
       it "redirects to the created event" do
@@ -146,27 +133,23 @@ RSpec.describe "/events", type: :request do
         }.to change(Event, :count).by(0)
       end
 
-      it "renders a successful response (i.e. to display the 'new' template)" do
+      it "renders an unprocessable_entity response (i.e. to display the 'new' template)" do
         user = User.create!({
           email: 'user@test.com',
           password: 'user123'
         })
         sign_in user
         post events_url, params: { event: invalid_attributes }
-        expect(response).to be_successful
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end
 
   describe "PATCH /update" do
     context "with valid parameters" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
-
       it "updates the requested event" do
         event = Event.create! valid_attributes
-        event.tickets.create! valid_ticket_attributes
+        new_attributes = {:name => "A new name", :description => "A new description", :location => "Lagos 2", :start_date => '2088-01-02', :end_date => '2088-01-04', :start_time => '14:00', :end_time => '18:00', :is_active => 0, :tickets_attributes => [{ :id => event.tickets.load.first.id, :name => 'Access 2', :payment_type => 'paid', :description => 'Allow access for one', :price => 2000, :available_slots => 1000 }]}
         user = User.create!({
           email: 'user@test.com',
           password: 'user123'
@@ -174,12 +157,26 @@ RSpec.describe "/events", type: :request do
         sign_in user
         patch event_url(event), params: { event: new_attributes }
         event.reload
-        skip("Add assertions for updated state")
+        ticket = event.tickets.load.first
+        expect(event.name).to eq(new_attributes[:name])
+        expect(event.description).to eq(new_attributes[:description])
+        expect(event.location).to eq(new_attributes[:location])
+        expect(event.start_date.strftime("%Y-%m-%d")).to eq(new_attributes[:start_date])
+        expect(event.end_date.strftime("%Y-%m-%d")).to eq(new_attributes[:end_date])
+        expect(event.start_time.strftime("%H:%M")).to eq(new_attributes[:start_time])
+        expect(event.end_time.strftime("%H:%M")).to eq(new_attributes[:end_time])
+        expect(event.is_active).to eq(new_attributes[:is_active])
+
+        expect(ticket.name).to eq(new_attributes[:tickets_attributes][0][:name])
+        expect(ticket.payment_type).to eq(new_attributes[:tickets_attributes][0][:payment_type])
+        expect(ticket.description).to eq(new_attributes[:tickets_attributes][0][:description])
+        expect(ticket.price).to eq(new_attributes[:tickets_attributes][0][:price])
+        expect(ticket.available_slots).to eq(new_attributes[:tickets_attributes][0][:available_slots])
       end
 
       it "redirects to the event" do
         event = Event.create! valid_attributes
-        event.tickets.create! valid_ticket_attributes
+        new_attributes = {:name => "A new name", :description => "A new description", :location => "Lagos 2", :start_date => '2088-01-02', :end_date => '2088-01-04', :start_time => '14:00', :end_time => '18:00', :is_active => 0, :tickets_attributes => [{ :id => event.tickets.load.first.id, :name => 'Access 2', :payment_type => 'paid', :description => 'Allow access for one', :price => 2000, :available_slots => 1000 }]}
         user = User.create!({
           email: 'user@test.com',
           password: 'user123'
@@ -192,24 +189,24 @@ RSpec.describe "/events", type: :request do
     end
 
     context "with invalid parameters" do
-      it "renders a successful response (i.e. to display the 'edit' template)" do
+      it "renders an have_http_status(:unprocessable_entity) response (i.e. to display to the 'edit' template)" do
         event = Event.create! valid_attributes
-        event.tickets.create! valid_ticket_attributes
         user = User.create!({
           email: 'user@test.com',
           password: 'user123'
         })
         sign_in user
         patch event_url(event), params: { event: invalid_attributes }
-        expect(response).to be_successful
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end
 
   describe "DELETE /destroy" do
     it "destroys the requested event" do
+      expect(Ticket.all.count).to equal(2)
       event = Event.create! valid_attributes
-      event.tickets.create! valid_ticket_attributes
+      expect(Ticket.all.count).to equal(3)
       expect {
         user = User.create!({
           email: 'user@test.com',
@@ -217,12 +214,11 @@ RSpec.describe "/events", type: :request do
         })
         sign_in user
         delete event_url(event)
-      }.to change(Event, :count).by(-1)
+      }.to change(Event, :count).by(-1) .and change(Ticket, :count).by(-1)
     end
 
     it "redirects to the events list" do
       event = Event.create! valid_attributes
-      event.tickets.create! valid_ticket_attributes
       user = User.create!({
         email: 'user@test.com',
         password: 'user123'
