@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :tickets
+  #resources :tickets
   resources :events
   devise_for :users
   get 'home/index'

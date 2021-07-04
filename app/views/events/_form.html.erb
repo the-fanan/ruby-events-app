@@ -10,8 +10,84 @@
       </ul>
     </div>
   <% end %>
+  <div class="inputs">
+    <div class="form-group">
+      <%= form.label :name, "Name of Event" %>
+      <%= form.text_field :name %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :description, "Description" %>
+      <%= form.text_area :description %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :location, "Location" %>
+      <%= form.text_field :location %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :start_date, "Start Date" %>
+      <%= form.date_field :start_date %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :end_date, "End Date" %>
+      <%= form.date_field :end_date %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :start_time, "Start Time" %>
+      <%= form.time_field :start_time %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :end_time, "End Time" %>
+      <%= form.time_field :end_time %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :is_active, "Make Event Available" %>
+      <%= form.radio_button :is_active, 1 %>
+      <%= form.label :is_active_1, "Yes" %>
+      <%= form.radio_button :age, 0 %>
+      <%= form.label :is_active_0, "No" %>
+    </div>
+  </div>
+  <h2> Ticket </h2>
+  <%= form.fields_for :tickets, form.object.tickets do |ticket_form| %>
+    <div class="fields">
+      <div class="form-group field">
+        <%= ticket_form.label :name, "Name of Ticket" %>
+        <%= ticket_form.text_field :name %>
+      </div>
+
+      <div class="form-group field">
+        <%= ticket_form.label :description, "Description" %>
+        <%= ticket_form.text_area :description %>
+      </div>
+
+      <div class="form-group field">
+        <%= ticket_form.label :payment_type, "Type" %>
+        <%= ticket_form.select :payment_type, ["free", "paid"] %>
+      </div>
+
+      <div class="form-group field">
+        <%= ticket_form.label :price, "Price (set 0 for free tickets)" %>
+        <%= ticket_form.number_field :price, step: 0.01, min: 0, max: 99999999.99%>
+      </div>
+
+      <div class="form-group field">
+        <%= ticket_form.label :available_slots, "Available Slots (use 0 for infinity)" %>
+        <%= ticket_form.number_field :available_slots, min: 0, max: 500000000 %>
+      </div>
+    </div>
+  <% end %>
 
   <div class="actions">
     <%= form.submit %>
   </div>
+  <script type="text/javascript">
+    
+  </script>
 <% end %>
