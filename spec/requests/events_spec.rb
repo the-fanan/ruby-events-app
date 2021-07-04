@@ -17,16 +17,57 @@ RSpec.describe "/events", type: :request do
   # Event. As you add validations to Event, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {
+      user_id: 1,
+      name: "a test event",
+      description: "A description",
+      location: "Lagos",
+      start_date: '2088-01-01',
+      end_date: '2088-01-02',
+      start_time: '13:00',
+      end_time: '16:00',
+      is_active: 1
+    }
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {
+      user_id: 1,
+      name: "a test event",
+      description: "A description",
+      location: "",
+      start_date: '2088-01-01',
+      end_date: '2081-01-02',
+      start_time: '13:00',
+      end_time: '10:00',
+      is_active: 1
+    }
+  }
+
+  let(:valid_ticket_attributes) {
+    {
+      name: 'Access',
+      payment_type: 'free',
+      description: 'Allow access for one',
+      price: 0,
+      available_slots: 100
+    }
+  }
+
+  let(:invalid_ticket_attributes) {
+    {
+      name: '',
+      payment_type: '',
+      description: 'Allow access for one',
+      price: 0,
+      available_slots: 100
+    }
   }
 
   describe "GET /index" do
     it "renders a successful response" do
-      Event.create! valid_attributes
+      event = Event.create! valid_attributes
+      event.tickets.create! valid_ticket_attributes
       get events_url
       expect(response).to be_successful
     end
@@ -35,6 +76,7 @@ RSpec.describe "/events", type: :request do
   describe "GET /show" do
     it "renders a successful response" do
       event = Event.create! valid_attributes
+      event.tickets.create! valid_ticket_attributes
       get event_url(event)
       expect(response).to be_successful
     end
@@ -82,7 +124,7 @@ RSpec.describe "/events", type: :request do
       end
     end
   end
-
+=begin
   describe "PATCH /update" do
     context "with valid parameters" do
       let(:new_attributes) {
@@ -112,10 +154,11 @@ RSpec.describe "/events", type: :request do
       end
     end
   end
-
+=end
   describe "DELETE /destroy" do
     it "destroys the requested event" do
       event = Event.create! valid_attributes
+      event.tickets.create! valid_ticket_attributes
       expect {
         delete event_url(event)
       }.to change(Event, :count).by(-1)
@@ -123,6 +166,7 @@ RSpec.describe "/events", type: :request do
 
     it "redirects to the events list" do
       event = Event.create! valid_attributes
+      event.tickets.create! valid_ticket_attributes
       delete event_url(event)
       expect(response).to redirect_to(events_url)
     end
