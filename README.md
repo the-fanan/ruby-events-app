@@ -3,6 +3,12 @@
 ## Demo
 [Link To Demo](https://tix-challenge.herokuapp.com/)
 
+Login Details For Test User
+
+**Email**: user@test.com
+
+**Password**: user123
+
 ## Schema Description
 ![Diagram Of Schema](https://github.com/the-fanan/ruby-events-app/blob/main/schema.png?raw=true)
 
