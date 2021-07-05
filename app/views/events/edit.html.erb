@@ -1,6 +1,7 @@
-<h1>Editing Event</h1>
+<div class="row event">
+  <div class="col">
+    <%= render 'form', event: @event, action_type: 'edit', title: 'Edit Event' %>
+  </div>
+</div>
 
-<%= render 'form', event: @event, action_type: 'edit' %>
 
-<%= link_to 'Show', @event %> |
-<%= link_to 'Back', events_path %>
