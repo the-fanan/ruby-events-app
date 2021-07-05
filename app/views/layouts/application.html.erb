@@ -16,15 +16,17 @@
     <%= render 'shared/navbar' %>
     <% if notice %>
       <div class="custom-notice alert alert-info alert-dismissible fade show" role="alert">
-        <%= notice %>
+        
         <button type="button" class="btn btn-close" data-bs-dismiss="alert" aria-label="Close"><i class="fas fa-times"></i></button>
+        <%= notice %>
       </div>
     <% end %>
 
     <% if alert %>
       <div class="custom-notice alert alert-danger alert-dismissible fade show" role="alert">
-        <%= alert %>
+        
         <button type="button" class="btn btn-close" data-bs-dismiss="alert" aria-label="Close"><i class="fas fa-times"></i></button>
+        <%= alert %>
       </div>
     <% end %>
 

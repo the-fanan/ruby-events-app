@@ -17,4 +17,5 @@
     position: absolute;
     width: 100%;
     top: 0px;
+    z-index: 99999;
  }

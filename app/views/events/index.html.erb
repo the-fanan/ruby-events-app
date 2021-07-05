@@ -1,41 +1,46 @@
-<div class="row">
-  <div class="col-12">
-    <h1>Events</h1>
-    <%= link_to 'Create New Event', new_event_path, class: "btn btn-lg btn-block btn-success" %>
+<div class="row event">
+  <div class="col">
+    <div class="d-flex justify-content-between mb-3 align-items-center">
+      <h1>Events</h1>
+      <%= link_to raw('New Event <i class="fas fa-arrow-right"></i>'), new_event_path, class: "btn btn-success" %>
+    </div>
+  
     <% @events.each do |event| %>
-      <div class="event-card">
-        <div class="row">
-          <div class="col event">
-          <h3><%= event.name %></h3>
-          <p class="description"><%= event.description %></p>
-          <p class="location"><i class="fas fa-map-marked-alt"></i> <%= event.location %></p>
-          <p class="dates"><i class="far fa-calendar-alt"></i> <%= event.start_date.strftime("%B %d, %Y") %> - <%= event.end_date.strftime("%B %d, %Y") %></p>
-          <p class="times"><i class="far fa-clock"></i> <%= event.start_time.strftime("%I:%M %p") %> - <%= event.end_time.strftime("%I:%M %p") %></p>
-          <p>
-          <% if event.is_active == 1 %>
-            <button class="btn btn-sm btn-info" tabindex="-1" disabled style="opacity: 1">Active</button>
-            <a href="<%= event_path(event) %>" class="share event link"> <i class="fas fa-link"></i> Share Link</a>
-          <% else %>
-            <button class="btn btn-sm btn-outline-danger" tabindex="-1" disabled style="opacity: 1">Inactive</button>
-          <% end %>
-          </p>
-          <%= link_to 'Show', event, class: "custom-nav-link" %>
-          <%= link_to 'Edit', edit_event_path(event), class: "custom-nav-link" %>
-          <%= link_to 'Destroy', event, method: :delete, data: { confirm: 'Are you sure?' }, class: "custom-nav-link" %>
-          </div>
-          <div class="col ticket">
-            <% ticket = event.tickets.load.first %>
-            <h4><i class="fas fa-ticket-alt"></i> <%= ticket.name%> </h4>
-            <p class="description"><%= ticket.description %></p>
+      <div class="event-card mb-4 d-flex justify-content-center">
+        <div class="main">
+          <div class="row justify-content-between">
+            <div class="col">
+            <h3><%= event.name %></h3>
+            <p class="description"><%= event.description %></p>
+            <p class="location"><i class="fas fa-map-marked-alt"></i> <%= event.location %></p>
+            <p class="dates"><i class="far fa-calendar-alt"></i> <%= event.start_date.strftime("%B %d, %Y") %> - <%= event.end_date.strftime("%B %d, %Y") %></p>
+            <p class="times"><i class="far fa-clock"></i> <%= event.start_time.strftime("%I:%M %p") %> - <%= event.end_time.strftime("%I:%M %p") %></p>
             <p>
-            <% if ticket.payment_type == 'free' %>
-              <button class="btn btn-sm btn-outline-success" tabindex="-1" disabled style="opacity: 1">Free</button>
+            <% if event.is_active == 1 %>
+              <button class="btn btn-sm btn-info" tabindex="-1" disabled style="opacity: 1">Active</button>
+              <a href="<%= event_path(event) %>" class="btn btn-sm btn-outline-dark" target="blank"> <i class="fas fa-link"></i> Share Link</a>
             <% else %>
-              <button class="btn btn-sm btn-warning" tabindex="-1" disabled style="opacity: 1">Paid</button>
-              <h6>&#8358; <%= ticket.price %></h6>
+              <button class="btn btn-sm btn-outline-danger" tabindex="-1" disabled style="opacity: 1">Inactive</button>
             <% end %>
             </p>
-            <button class="btn btn-sm btn-outline-info" tabindex="-1" disabled style="opacity: 1">Slots: <%= ticket.available_slots %></button>
+            <%= link_to 'Show', event, class: "btn btn-sm btn-outline-info", target: 'blank' %>
+            <%= link_to 'Edit', edit_event_path(event), class: "btn btn-sm btn-outline-warning", target: 'blank' %>
+            <%= link_to 'Destroy', event, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-sm btn-danger" %>
+            </div>
+            <div class="col ticket">
+              <% ticket = event.tickets.load.first %>
+              <h4><i class="fas fa-ticket-alt"></i> <%= ticket.name%> </h4>
+              <p class="description"><%= ticket.description %></p>
+              <p>
+              <% if ticket.payment_type == 'free' %>
+                <button class="btn btn-sm btn-outline-success" tabindex="-1" disabled style="opacity: 1">Free</button>
+              <% else %>
+                <button class="btn btn-sm btn-warning" tabindex="-1" disabled style="opacity: 1">Paid</button>
+                <h6>&#8358; <%= ticket.price %></h6>
+              <% end %>
+              </p>
+              <button class="btn btn-sm btn-outline-info" tabindex="-1" disabled style="opacity: 1">Slots: <%= ticket.available_slots %></button>
+            </div>
           </div>
         </div>
       </div>
