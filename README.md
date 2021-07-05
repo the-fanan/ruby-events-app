@@ -26,4 +26,8 @@ The ticket only needs an *event_id* field to link it to an event and hence to th
 
 You will notice an *is_active* column on the **Events** table, this is to allow users to disable their events when they do not want it to be accessible to the public.
 
+## Testing
+Tests are written with RSpec and can be found in the spec folder. 
+To run tests, edit the database setup for testing in `config/database.yml`. Then run `rspec` from the root directory of this project.
+
 
