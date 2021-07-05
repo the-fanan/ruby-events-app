@@ -1,4 +1,12 @@
 <% name = current_user.present? ? current_user.email : 'Stranger' %>
-<h1>Home#index</h1>
-<h2>Welcome, <%= name %> </h2>
-<p>Find me in app/views/home/index.html.erb</p>
+
+<div class="row h-100 home">
+    <div class="col d-flex justify-content-center align-items-center">
+        <div class="text-holder align-self-center">
+            <h1>Welcome, <%= name %> !</h1>
+            <h2>Event Manager is here to help you manage your events</h2>
+            <%= link_to 'Get Started', new_user_registration_path, class: 'btn btn-lg btn-success' %>
+        </div>
+    </div>
+</div>
+
